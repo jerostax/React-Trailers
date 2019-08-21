@@ -16,6 +16,10 @@ class App extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
+    this.initMovie();
+  }
+
+  initMovie = () => {
     axios
       .get(`${API_END_POINT}${POPULAR_MOVIES_URL}&api_key=${API_KEY}`)
       .then(res => {
@@ -23,14 +27,19 @@ class App extends React.Component {
           movieList: res.data.results.slice(1, 6),
           currentMovie: res.data.results[0]
         });
-        console.log(this.state.movieList, this.state.currentMovie);
+        // console.log(this.state.movieList, this.state.currentMovie);
       });
-  }
+  };
+
   render() {
     return (
       <div>
         <SearchBar />
-        <VideoList />
+        {this.state.movieList.length <= 5 ? (
+          <VideoList movieList={this.state.movieList} />
+        ) : (
+          ''
+        )}
         <VideoDetail
           title={this.state.currentMovie.title}
           description={this.state.currentMovie.overview}
